@@ -1,6 +1,27 @@
 {
+  "name": "petstyle-loja-virtual",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/henriquejesusdev/petstyle-loja-virtual#readme",
+  "bugs": {
+    "url": "https://github.com/henriquejesusdev/petstyle-loja-virtual/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henriquejesusdev/petstyle-loja-virtual.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo  \" Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.8",
     "tailwindcss": "^4.1.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.8"
   }
 }
