@@ -1,167 +1,190 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet&Style - Produtos com Estilo para Pets</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="font-sans bg-gray-100">
-  <!-- Header -->
-  <header class="bg-blue-600 text-white py-4 sticky top-0 z-50">
-    <div class="container mx-auto px-4 flex justify-between items-center">
-      <div class="text-2xl font-bold">Pet&Style</div>
-      <nav class="flex space-x-4">
-        <a href="#" class="hover:underline">Início</a>
-        <a href="#produtos" class="hover:underline">Produtos</a>
-        <a href="#depoimentos" class="hover:underline">Depoimentos</a>
-        <a href="#contato" class="hover:underline">Contato</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="bg-blue-500 text-white py-16">
-    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
-      <div class="md:w-1/2 mb-8 md:mb-0">
-        <h1 class="text-4xl font-bold mb-4">Estilo e Conforto para seu Pet</h1>
-        <p class="text-lg mb-6">Descubra produtos únicos que combinam design e qualidade para seu melhor amigo.</p>
-        <a href="#produtos" class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-full font-semibold hover:bg-yellow-500">Ver Produtos</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet&Style - Produtos com Estilo para Pets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="font-sans bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-4 sticky top-0 z-50">
+      <div class="container mx-auto px-4 flex justify-between items-center">
+        <div class="text-2xl font-bold">Pet&Style</div>
+        <nav class="flex space-x-4">
+          <a href="#" class="hover:underline">Início</a>
+          <a href="#produtos" class="hover:underline">Produtos</a>
+          <a href="#depoimentos" class="hover:underline">Depoimentos</a>
+          <a href="#contato" class="hover:underline">Contato</a>
+        </nav>
       </div>
-      <div class="md:w-1/2">
-        <img src="https://images.pexels.com/photos/4587971/pexels-photo-4587971.jpeg" alt="Cachorro com acessório estiloso" class="w-full h-64 object-cover rounded-lg">
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- Produtos Section -->
-  <section id="produtos" class="py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-12">Nossos Produtos</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Produto 1 -->
-        <div class="bg-white rounded-lg shadow-md p-4">
-          <img src="https://images.pexels.com/photos/825947/pexels-photo-825947.jpeg" alt="Caminha para Pet" class="w-full h-48 object-cover rounded-md mb-4">
-          <h3 class="text-xl font-semibold">Caminha Luxo</h3>
-          <p class="text-gray-600 mb-2">Caminha confortável com tecido premium.</p>
-          <p class="text-blue-600 font-bold">R$ 199,90</p>
-        </div>
-        <!-- Produto 2 -->
-        <div class="bg-white rounded-lg shadow-md p-4">
-          <img src="https://images.pexels.com/photos/1125850/pexels-photo-1125850.jpeg" alt="Brinquedo Interativo" class="w-full h-48 object-cover rounded-md mb-4">
-          <h3 class="text-xl font-semibold">Brinquedo Interativo</h3>
-          <p class="text-gray-600 mb-2">Bola com som para horas de diversão.</p>
-          <p class="text-blue-600 font-bold">R$ 49,90</p>
-        </div>
-        <!-- Produto 3 -->
-        <div class="bg-white rounded-lg shadow-md p-4">
-          <img src="https://images.pexels.com/photos/4588065/pexels-photo-4588065.jpeg" alt="Coleira Estilosa" class="w-full h-48 object-cover rounded-md mb-4">
-          <h3 class="text-xl font-semibold">Coleira Estilosa</h3>
-          <p class="text-gray-600 mb-2">Coleira ajustável com design moderno.</p>
-          <p class="text-blue-600 font-bold">R$ 79,90</p>
-        </div>
-        <!-- Produto 4 -->
-        <div class="bg-white rounded-lg shadow-md p-4">
-          <img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg" alt="Roupinha Pet" class="w-full h-48 object-cover rounded-md mb-4">
-          <h3 class="text-xl font-semibold">Roupinha Fashion</h3>
-          <p class="text-gray-600 mb-2">Roupa confortável para seu pet brilhar.</p>
-          <p class="text-blue-600 font-bold">R$ 99,90</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Depoimentos Section -->
-  <section id="depoimentos" class="bg-gray-200 py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-12">O que nossos clientes dizem</h2>
-      <div class="flex flex-col md:flex-row gap-6">
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <p class="text-gray-600 italic">"Meus gatos amaram a caminha! Super confortável e estilosa!"</p>
-          <p class="mt-4 font-semibold">Ana S.</p>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <p class="text-gray-600 italic">"A coleira é linda e resistente, perfeita para meu cachorro!"</p>
-          <p class="mt-4 font-semibold">Lucas M.</p>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <p class="text-gray-600 italic">"Os brinquedos mantêm meu pet entretido por horas!"</p>
-          <p class="mt-4 font-semibold">Mariana P.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contato Section -->
-  <section id="contato" class="py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-12">Entre em Contato</h2>
-      <div class="flex flex-col md:flex-row gap-8">
-        <div class="md:w-1/2">
-          <h3 class="text-xl font-semibold mb-4">Informações de Contato</h3>
-          <p class="text-gray-600 mb-2">E-mail: contato@petestyle.com</p>
-          <p class="text-gray-600 mb-2">Telefone: (11) 99999-9999</p>
-          <p class="text-gray-600">Atendimento: Seg-Sex, 9h-18h</p>
+    <!-- Hero Section -->
+    <section class="bg-blue-500 text-white py-16">
+      <div
+        class="container mx-auto px-4 flex flex-col md:flex-row items-center"
+      >
+        <div class="md:w-1/2 mb-8 md:mb-0">
+          <h1 class="text-4xl font-bold mb-4">
+            Estilo e Conforto para seu Pet
+          </h1>
+          <p class="text-lg mb-6">
+            Descubra produtos únicos que combinam design e qualidade para seu
+            melhor amigo.
+          </p>
+          <a
+            href="#produtos"
+            class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-full font-semibold hover:bg-yellow-500"
+            >Ver Produtos</a
+          >
         </div>
         <div class="md:w-1/2">
-          <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl font-semibold mb-4">Envie uma Mensagem</h3>
-            <div class="space-y-4">
-              <input type="text" placeholder="Nome" class="w-full p-3 border rounded-md">
-              <input type="email" placeholder="E-mail" class="w-full p-3 border rounded-md">
-              <textarea placeholder="Mensagem" class="w-full p-3 border rounded-md h-32"></textarea>
-              <button class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700">Enviar</button>
+          <img
+            src="https://images.pexels.com/photos/4587971/pexels-photo-4587971.jpeg"
+            alt="Cachorro com acessório estiloso"
+            class="w-full h-64 object-cover rounded-lg"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Produtos Section -->
+    <section id="produtos" class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Nossos Produtos</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Produto 1 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img
+              src="https://images.pexels.com/photos/825947/pexels-photo-825947.jpeg"
+              alt="Caminha para Pet"
+              class="w-full h-48 object-cover rounded-md mb-4"
+            />
+            <h3 class="text-xl font-semibold">Caminha Luxo</h3>
+            <p class="text-gray-600 mb-2">
+              Caminha confortável com tecido premium.
+            </p>
+            <p class="text-blue-600 font-bold">R$ 199,90</p>
+          </div>
+          <!-- Produto 2 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img
+              src="https://images.pexels.com/photos/1125850/pexels-photo-1125850.jpeg"
+              alt="Brinquedo Interativo"
+              class="w-full h-48 object-cover rounded-md mb-4"
+            />
+            <h3 class="text-xl font-semibold">Brinquedo Interativo</h3>
+            <p class="text-gray-600 mb-2">
+              Bola com som para horas de diversão.
+            </p>
+            <p class="text-blue-600 font-bold">R$ 49,90</p>
+          </div>
+          <!-- Produto 3 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img
+              src="https://images.pexels.com/photos/4588065/pexels-photo-4588065.jpeg"
+              alt="Coleira Estilosa"
+              class="w-full h-48 object-cover rounded-md mb-4"
+            />
+            <h3 class="text-xl font-semibold">Coleira Estilosa</h3>
+            <p class="text-gray-600 mb-2">
+              Coleira ajustável com design moderno.
+            </p>
+            <p class="text-blue-600 font-bold">R$ 79,90</p>
+          </div>
+          <!-- Produto 4 -->
+          <div class="bg-white rounded-lg shadow-md p-4">
+            <img
+              src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg"
+              alt="Roupinha Pet"
+              class="w-full h-48 object-cover rounded-md mb-4"
+            />
+            <h3 class="text-xl font-semibold">Roupinha Fashion</h3>
+            <p class="text-gray-600 mb-2">
+              Roupa confortável para seu pet brilhar.
+            </p>
+            <p class="text-blue-600 font-bold">R$ 99,90</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Depoimentos Section -->
+    <section id="depoimentos" class="bg-gray-200 py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">
+          O que nossos clientes dizem
+        </h2>
+        <div class="flex flex-col md:flex-row gap-6">
+          <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-600 italic">
+              "Meus gatos amaram a caminha! Super confortável e estilosa!"
+            </p>
+            <p class="mt-4 font-semibold">Ana S.</p>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-600 italic">
+              "A coleira é linda e resistente, perfeita para meu cachorro!"
+            </p>
+            <p class="mt-4 font-semibold">Lucas M.</p>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-600 italic">
+              "Os brinquedos mantêm meu pet entretido por horas!"
+            </p>
+            <p class="mt-4 font-semibold">Mariana P.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contato Section -->
+    <section id="contato" class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Entre em Contato</h2>
+        <div class="flex flex-col md:flex-row gap-8">
+          <div class="md:w-1/2">
+            <h3 class="text-xl font-semibold mb-4">Informações de Contato</h3>
+            <p class="text-gray-600 mb-2">E-mail: contato@petestyle.com</p>
+            <p class="text-gray-600 mb-2">Telefone: (11) 99999-9999</p>
+            <p class="text-gray-600">Atendimento: Seg-Sex, 9h-18h</p>
+          </div>
+          <div class="md:w-1/2">
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <h3 class="text-xl font-semibold mb-4">Envie uma Mensagem</h3>
+              <div class="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Nome"
+                  class="w-full p-3 border rounded-md"
+                />
+                <input
+                  type="email"
+                  placeholder="E-mail"
+                  class="w-full p-3 border rounded-md"
+                />
+                <textarea
+                  placeholder="Mensagem"
+                  class="w-full p-3 border rounded-md h-32"
+                ></textarea>
+                <button
+                  class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700"
+                >
+                  Enviar
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="bg-blue-600 text-white py-4">
-    <div class="container mx-auto px-4 text-center">
-      <p>&copy; 2025 Pet&Style. Todos os direitos reservados.</p>
-    </div>
-  </footer>
-</body>
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-4">
+      <div class="container mx-auto px-4 text-center">
+        <p>&copy; 2025 Pet&Style. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+  </body>
 </html>
